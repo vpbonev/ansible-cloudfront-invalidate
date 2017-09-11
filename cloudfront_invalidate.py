@@ -7,14 +7,14 @@
 ## Redistribution and use in source and binary forms, with or without
 ## modification, are permitted provided that the following conditions
 ## are met:
-## 
+##
 ## 1. Redistributions of source code must retain the above copyright
 ##    notice, this list of conditions and the following disclaimer.
 ## 2. Redistributions in binary form must reproduce the above
 ##    copyright notice, this list of conditions and the following
 ##    disclaimer in the documentation and/or other materials
 ##    provided with the distribution.
-## 
+##
 ## THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ## "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 ## LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -28,17 +28,23 @@
 ## SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 DOCUMENTATION = '''
 ---
-module: cloudfront_invalidate 
+module: cloudfront_invalidate
 short_description: Make Cloudfront invalidation requests.
 description:
     - Makes Cloudfront invalidation requests.  The Cloudfront distribution id is referenced by its id. It is designed to be used for tasks such as code deployments where static assets are updated on a Cloudfront distribution and need to have their cache cleared.  This module has a dependency on python-boto.
 version_added: "1.0"
 options:
-  profile_name:
+  aws_access_key:
     description:
-      - The AWS Profile Name.
+      - The AWS Access Key.
     required: true
-    default: null 
+    default: null
+    aliases: []
+  aws_secret_key:
+    description:
+      - The AWS Secret Key.
+    required: true
+    default: null
     aliases: []
   distribution_id:
     description:
@@ -53,33 +59,11 @@ options:
     default: null
     aliases: []
 
-author: "Brian Carey (https://github.com/kissit)"
+author: "Viktor Bonev (https://github.com/kissit)"
 extends_documentation_fragment:
     - aws
     - ec2
 '''
-
-EXAMPLES = '''
-# Basic example of invalidating a single path
-tasks:
-- name: "Invalidate a single path"
-  cloudfront_invalidate: 
-    profile_name: YOUR_AWS_PROFILE_NAME
-    distribution_id: YOUR_CLOUDFRONT_DIST_ID
-    path: /js/*
-
-# Basic example of invalidating a multiple paths
-tasks:
-- name: "Invalidate multiple paths"
-  cloudfront_invalidate:
-    profile_name: YOUR_AWS_PROFILE_NAME
-    distribution_id: YOUR_CLOUDFRONT_DIST_ID
-    path: {{ item }}
-  with_items:
-    - /js/*
-    - /images/*
-'''
-
 
 try:
     import boto
@@ -96,7 +80,8 @@ def main():
     argument_spec = aws_common_argument_spec()
 
     argument_spec.update(dict(
-            profile_name = dict(required=True),
+            aws_access_key = dict(required=True),
+            aws_secret_key = dict(required=True),
             distribution_id = dict(required=True),
             path = dict(required=True),
         )
@@ -108,13 +93,12 @@ def main():
 
     distribution_id = module.params.get('distribution_id')
     path = module.params.get('path')
-    profile_name = module.params.get('profile_name')
-
-    session = Session(profile_name=profile_name).get_credentials()
+    aws_access_key = module.params.get('aws_access_key')
+    aws_secret_key = module.params.get('aws_secret_key')
 
     # connect to Cloudfront
     try:
-        conn = CloudFrontConnection(session.access_key,session.secret_key)
+        conn = CloudFrontConnection(aws_access_key_id = aws_access_key, aws_secret_access_key = aws_secret_key)
     except boto.exception.BotoServerError as e:
         module.fail_json(msg = e.error_message)
 
