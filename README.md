@@ -5,42 +5,33 @@ This is a simple Ansible module used to make AWS Cloudfront invalidation request
 ### Requirements
 * First and foremost, you need Ansible installed and configured for your environment
 * python-boto
-* The standard EC2 related modules configured for your AWS connection either as environment vars or Ansible vars (or both) or create next files:
-
-```
-~/.aws/config
-    [deploy]
-    aws_access_key_id=foo
-    aws_secret_access_key=bar
-
-~/.aws/credentials
-    [profile deploy]
-    region=foo-region
-```
-
+* The standard EC2 related modules configured for your AWS connection either as environment vars or Ansible vars
 
 ### Installation & Configuration
 * Clone/download this repo
-* Place the cloudfront_invalidate.py file in your Ansible module path
+* Place the cloudfront_invalidate.py file in your Ansible module path under amazon (PATH_TO_ANSIBLE/ansible/modules/cloud/amazon)
 
 ### Usage
 * See the example.yml playbook for a working example (after replacing your details of course)
 * Basic usage clearing a single path:
 ```
 - name: "Invalidate a single path"
-  cloudfront_invalidate: 
-    profile_name: YOUR_AWS_PROFILE_NAME
+  cloudfront_invalidate:
+    aws_access_key: "YOUR_AWS_ACCESS_KEY"
+    aws_secret_key: "YOUR_AWS_SECRET_KEY"
     distribution_id: YOUR_CLOUDFRONT_DIST_ID
     path: "/js/*"
 ```
 * Basic usage clearing a single path:
 ```
 - name: "Invalidate multiple paths"
-  cloudfront_invalidate: 
-    profile_name: YOUR_AWS_PROFILE_NAME
+  cloudfront_invalidate:
+    aws_access_key: "YOUR_AWS_ACCESS_KEY"
+    aws_secret_key: "YOUR_AWS_SECRET_KEY"
     distribution_id: YOUR_CLOUDFRONT_DIST_ID
     path: "{{ item }}"
   with_items:
     - "/js/*"
     - "/images/*"
+    - "archive.zip"
 ```
