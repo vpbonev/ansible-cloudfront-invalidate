@@ -6,9 +6,10 @@
   tasks:
     - name: "Make an example invalidation request for two paths"
       cloudfront_invalidate:
-        profile_name: "YOUR AWS PROFILE NAME"
-        distribution_id: "YOUR CLOUDFRONT DIST ID"
-        path: "{{ item }}"
+        aws_access_key: "YOUR_AWS_ACCESS_KEY"
+        aws_secret_key: "YOUR_AWS_SECRET_KEY"
+        distribution_id: "YOUR_CLOUDFRONT_DIST_ID"
+        path: "{{item}}"
       with_items:
         - "/js/*"
-        - "example.gif"
+        - "archive.zip"
