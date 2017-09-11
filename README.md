@@ -19,7 +19,7 @@ This is a simple Ansible module used to make AWS Cloudfront invalidation request
   cloudfront_invalidate:
     aws_access_key: "YOUR_AWS_ACCESS_KEY"
     aws_secret_key: "YOUR_AWS_SECRET_KEY"
-    distribution_id: YOUR_CLOUDFRONT_DIST_ID
+    distribution_id: "YOUR_CLOUDFRONT_DIST_ID"
     path: "/js/*"
 ```
 * Basic usage clearing a single path:
@@ -28,7 +28,7 @@ This is a simple Ansible module used to make AWS Cloudfront invalidation request
   cloudfront_invalidate:
     aws_access_key: "YOUR_AWS_ACCESS_KEY"
     aws_secret_key: "YOUR_AWS_SECRET_KEY"
-    distribution_id: YOUR_CLOUDFRONT_DIST_ID
+    distribution_id: "YOUR_CLOUDFRONT_DIST_ID"
     path: "{{ item }}"
   with_items:
     - "/js/*"
