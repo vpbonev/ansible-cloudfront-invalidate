@@ -59,7 +59,7 @@ options:
     default: null
     aliases: []
 
-author: "Viktor Bonev (https://github.com/kissit)"
+author: "Viktor Bonev (https://github.com/vpbonev)"
 extends_documentation_fragment:
     - aws
     - ec2
